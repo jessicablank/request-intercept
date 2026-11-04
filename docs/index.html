@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request Intercept</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Request Intercept</h1>
+    <p>Mock the response of an HTTPS API, or force an error code, for any site you test in this browser.</p>
+  </header>
+
+  <main>
+    <section id="extension-status" class="banner banner-warn" role="status">
+      Checking for the Request Intercept extension…
+    </section>
+
+    <details id="setup" class="card">
+      <summary>One-time setup (why an extension is needed)</summary>
+      <p>
+        Browsers do not let one website change the network traffic of another website, so this page
+        works together with a small companion Chrome/Edge extension. The extension stores the rules you
+        create here and, on every site, swaps matching <code>fetch</code>/<code>XMLHttpRequest</code>
+        responses for the one you configured.
+      </p>
+      <ol>
+        <li><a href="request-intercept-extension.zip" download>Download the extension (.zip)</a> and unzip it.</li>
+        <li>Open <code>chrome://extensions</code> (or <code>edge://extensions</code>) and turn on <strong>Developer mode</strong>.</li>
+        <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
+        <li>Reload this page – the banner above should turn green.</li>
+      </ol>
+    </details>
+
+    <section class="card">
+      <div class="row space-between">
+        <h2>Rules</h2>
+        <label class="switch">
+          <input type="checkbox" id="global-enabled" checked>
+          Interception enabled
+        </label>
+      </div>
+      <p class="hint">The first enabled rule that matches a request wins. Reload the site you are testing after changing rules.</p>
+      <table id="rules-table">
+        <thead>
+          <tr><th>On</th><th>Name</th><th>Method</th><th>URL</th><th>Response</th><th></th></tr>
+        </thead>
+        <tbody id="rules-body"></tbody>
+      </table>
+      <p id="no-rules" class="hint">No rules yet. Add one below.</p>
+    </section>
+
+    <section class="card">
+      <h2 id="form-title">Add a rule</h2>
+      <form id="rule-form" autocomplete="off">
+        <input type="hidden" id="rule-id">
+        <div class="grid">
+          <label>Name (optional)
+            <input type="text" id="rule-name" placeholder="e.g. Users API returns 404">
+          </label>
+          <label>Method
+            <select id="rule-method">
+              <option>ANY</option><option>GET</option><option>POST</option><option>PUT</option>
+              <option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid">
+          <label class="wide">API request URL
+            <input type="text" id="rule-url" required placeholder="https://api.example.com/v1/users">
+          </label>
+          <label>Match type
+            <select id="rule-match">
+              <option value="contains">URL contains</option>
+              <option value="exact">Exact URL</option>
+              <option value="wildcard">Wildcard (*)</option>
+              <option value="regex">Regular expression</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid">
+          <label>Respond with
+            <select id="rule-mode">
+              <option value="modify">200 OK – modified response body</option>
+              <option value="error">Error status code</option>
+              <option value="network">Network failure (no response)</option>
+            </select>
+          </label>
+          <label id="status-field" hidden>Status code
+            <input type="number" id="rule-status" min="200" max="599" value="404" list="status-codes">
+            <datalist id="status-codes">
+              <option value="400">Bad Request</option><option value="401">Unauthorized</option>
+              <option value="403">Forbidden</option><option value="404">Not Found</option>
+              <option value="409">Conflict</option><option value="422">Unprocessable Entity</option>
+              <option value="429">Too Many Requests</option><option value="500">Internal Server Error</option>
+              <option value="502">Bad Gateway</option><option value="503">Service Unavailable</option>
+              <option value="504">Gateway Timeout</option>
+            </datalist>
+          </label>
+          <label>Delay (ms)
+            <input type="number" id="rule-delay" min="0" max="60000" value="0">
+          </label>
+        </div>
+        <div id="body-fields">
+          <label>Content-Type
+            <input type="text" id="rule-content-type" value="application/json">
+          </label>
+          <label>Response body
+            <textarea id="rule-body" rows="10" spellcheck="false" placeholder='{"message": "mocked"}'></textarea>
+          </label>
+          <div class="row">
+            <button type="button" id="load-real" class="secondary">Load real response</button>
+            <button type="button" id="format-json" class="secondary">Format JSON</button>
+            <span id="body-message" class="hint"></span>
+          </div>
+        </div>
+        <div class="row actions">
+          <button type="submit" id="save-rule">Add rule</button>
+          <button type="button" id="cancel-edit" class="secondary" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Test a request</h2>
+      <p class="hint">Sends a request from this page so you can check what a site would receive.</p>
+      <form id="test-form" class="grid">
+        <label class="wide">URL
+          <input type="text" id="test-url" required placeholder="https://api.example.com/v1/users">
+        </label>
+        <label>Method
+          <select id="test-method">
+            <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option>
+          </select>
+        </label>
+        <div class="row actions"><button type="submit">Send</button></div>
+      </form>
+      <pre id="test-output" hidden></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Only requests made with <code>fetch</code>/<code>XMLHttpRequest</code> by page scripts are intercepted (not page navigations, images or service-worker requests).</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

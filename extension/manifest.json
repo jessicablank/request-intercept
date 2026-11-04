@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Request Intercept",
+  "version": "1.0.0",
+  "description": "Companion extension for the Request Intercept control panel. Mocks fetch/XHR responses or returns error codes for matching API requests.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Request Intercept – open control panel"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://jessicablank.github.io/request-intercept/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*"
+      ],
+      "js": ["bridge.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["relay.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["inject.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    }
+  ]
+}
