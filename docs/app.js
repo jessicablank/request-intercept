@@ -89,7 +89,11 @@
       toggle.type = 'checkbox';
       toggle.checked = rule.enabled;
       toggle.setAttribute('aria-label', 'Rule enabled');
-      toggle.addEventListener('change', () => { rule.enabled = toggle.checked; persist(); });
+      toggle.addEventListener('change', () => {
+        state.rules = state.rules.map((current) =>
+          current.id === rule.id ? { ...current, enabled: toggle.checked } : current);
+        persist();
+      });
       toggleCell.append(toggle);
 
       const actions = document.createElement('td');
