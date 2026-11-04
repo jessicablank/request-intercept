@@ -1,14 +1,16 @@
 :root {
-  --fg: #1f2328;
-  --muted: #59636e;
-  --border: #d1d9e0;
-  --bg: #f6f8fa;
-  --accent: #0969da;
-  --danger: #cf222e;
-  --ok-bg: #dafbe1;
-  --ok-fg: #1a7f37;
-  --warn-bg: #fff8c5;
-  --warn-fg: #7d4e00;
+  color-scheme: dark;
+  --fg: #e6edf3;
+  --muted: #919ba5;
+  --border: #30363d;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --accent: #2f81f7;
+  --danger: #f85149;
+  --ok-bg: #12261e;
+  --ok-fg: #3fb950;
+  --warn-bg: #2b2111;
+  --warn-fg: #e3b341;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   color: var(--fg);
   background: var(--bg);
@@ -20,9 +22,10 @@ header, main, footer { max-width: 960px; margin: 0 auto; padding: 0 16px; }
 header h1 { margin-bottom: 4px; }
 header p, footer p, .hint { color: var(--muted); }
 .hint { font-size: 0.9em; }
+a { color: #58a6ff; }
 
 .card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
@@ -49,7 +52,14 @@ input[type="text"], input[type="number"], select, textarea {
   padding: 6px 8px;
   border: 1px solid var(--border);
   border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
   font-weight: normal;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 textarea, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; }
 
@@ -61,8 +71,8 @@ button {
   color: #fff;
   cursor: pointer;
 }
-button.secondary { background: #fff; color: var(--accent); }
-button.danger { border-color: var(--danger); background: #fff; color: var(--danger); }
+button.secondary { background: var(--surface); color: var(--accent); }
+button.danger { border-color: var(--danger); background: var(--surface); color: var(--danger); }
 button.small { padding: 2px 8px; font-size: 0.85em; }
 
 table { width: 100%; border-collapse: collapse; }
