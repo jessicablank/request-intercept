@@ -42,6 +42,8 @@ GitHub Pages panel works with a small companion browser extension (Chrome/Edge 1
    `[request-intercept] GET https://… → 404`, and mocked responses carry an `X-Request-Intercept` header.
 4. Use **Test a request** on the panel to check what a URL currently returns, and the
    **Interception enabled** switch to turn everything off without deleting rules.
+   A rule applies only when both **Interception enabled** and its **On** checkbox are checked.
+   The first enabled rule matching the request wins.
 
 ## Limitations
 
@@ -60,3 +62,9 @@ cd docs && python3 -m http.server 8000
 ```
 
 Then open <http://localhost:8000/> (the extension's bridge also runs on `localhost` / `127.0.0.1`).
+
+Run the regression tests with Node.js:
+
+```sh
+node --test
+```
